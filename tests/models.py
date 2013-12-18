@@ -176,3 +176,9 @@ class Article(models.Model):
     title = models.CharField(max_length=100)
 
     tags = TaggableManager(through=ArticleTaggedItem)
+
+
+class OtherName(models.Model):
+    title = models.CharField(max_length=100)
+
+    related_tags = TaggableManager()

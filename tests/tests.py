@@ -16,7 +16,7 @@ from django.contrib.contenttypes.models import ContentType
 from taggit.managers import TaggableManager, _model_name
 from taggit.models import Tag, TaggedItem
 from .forms import (FoodForm, DirectFoodForm, CustomPKFoodForm,
-    OfficialFoodForm)
+    OfficialFoodForm, OtherNameForm)
 from .models import (Food, Pet, HousePet, DirectFood, DirectPet,
     DirectHousePet, TaggedPet, CustomPKFood, CustomPKPet, CustomPKHousePet,
     TaggedCustomPKPet, OfficialFood, OfficialPet, OfficialHousePet,
@@ -538,3 +538,14 @@ class TagStringParseTestCase(UnitTestCase):
         self.assertEqual(edit_string_for_tags([plain, spaces, comma]), '"com,ma", "spa ces", plain')
         self.assertEqual(edit_string_for_tags([plain, comma]), '"com,ma", plain')
         self.assertEqual(edit_string_for_tags([comma, spaces]), '"com,ma", "spa ces"')
+
+
+class OtherNameTestCase(BaseTaggingTestCase):
+    form_class = OtherNameForm
+
+    def test_form(self):
+        f = self.form_class()
+        # I shouldn't even have to be using force_text here because I should
+        # just have label='Related tags' as that's what Django does by default
+        # on any field.
+        self.assertEqual(force_text(f.fields['related_tags'].label), 'Related tags')
