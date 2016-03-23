@@ -2,12 +2,18 @@ from __future__ import unicode_literals
 from operator import attrgetter
 
 from django import VERSION
-from django.contrib.contenttypes.generic import GenericRelation
+
+if VERSION > (1, 9):
+    from django.contrib.contenttypes.fields import GenericRelation
+    from django.db.models.fields.reverse_related import ForeignObjectRel as RelatedObject
+else:
+    from django.contrib.contenttypes.generic import GenericRelation
+    from django.db.models.related import RelatedObject
+
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, router
 from django.db.models.fields import Field
 from django.db.models.fields.related import ManyToManyRel, RelatedField, add_lazy_relation
-from django.db.models.related import RelatedObject
 from django.utils.text import capfirst
 from django.utils.translation import ugettext_lazy as _
 from django.utils import six
@@ -37,6 +43,7 @@ class TaggableRel(ManyToManyRel):
         self.multiple = True
         self.through = None
         self.field = field
+        self.many_to_many = True
 
     def get_joining_columns(self):
         return self.field.get_reverse_joining_columns()
